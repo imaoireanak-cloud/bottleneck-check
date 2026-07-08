@@ -7,6 +7,9 @@
 <meta name="description" content="勉強・部活・仕事・創作——16の質問に答えるだけで、あなたの成長を最も妨げている「詰まり」（ボトルネック）を診断します。約2分。">
 <meta property="og:title" content="ボトルネック診断">
 <meta property="og:description" content="16問・約2分。頑張っているのに伸びない原因を8つの領域から特定します。">
+<meta property="og:url" content="https://imaoireanak-cloud.github.io/bottleneck-check/">
+<meta property="og:image" content="https://imaoireanak-cloud.github.io/bottleneck-check/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta property="og:type" content="website">
 <style>
 :root {
@@ -119,6 +122,8 @@ button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: tra
 .r-headline { font-size: 26px; font-weight: 800; line-height: 1.35; margin-bottom: 4px; }
 .r-headline em { font-style: normal; color: var(--accent-deep); }
 .r-sub { font-size: 13px; color: var(--ink-2); margin-bottom: 22px; }
+.r-img-wrap { display: none; margin: 0 0 20px; }
+.r-img-wrap img { width: 100%; border-radius: 12px; display: block; border: 1px solid var(--border); }
 
 .viz-root { margin-bottom: 8px; }
 .viz-title { font-size: 13px; font-weight: 700; color: var(--ink-2); margin-bottom: 14px; }
@@ -203,6 +208,7 @@ footer { text-align: center; font-size: 11px; color: var(--muted); margin-top: 3
       <p class="r-top">あなたの最大のボトルネックは</p>
       <h2 class="r-headline" id="r-headline"></h2>
       <p class="r-sub" id="r-sub"></p>
+      <div class="r-img-wrap" id="r-img-wrap"><img id="r-img" alt=""></div>
 
       <div class="viz-root">
         <div class="viz-title">領域別ボトルネック度（高いほど成長を妨げている）</div>
@@ -375,6 +381,14 @@ function showResult() {
     top.v >= 67 ? "この領域の詰まりを取るだけで、成果は大きく変わります。"
     : top.v >= 34 ? "全体としては健闘中。この領域を整えればさらに伸びます。"
     : "大きなボトルネックはありません。今のやり方を維持しつつ微調整を。";
+
+  // per-category artwork: shown automatically once img/<id>.png exists
+  const imgWrap = document.getElementById("r-img-wrap");
+  const rImg = document.getElementById("r-img");
+  imgWrap.style.display = "none";
+  rImg.onload = () => { imgWrap.style.display = "block"; };
+  rImg.onerror = () => { imgWrap.style.display = "none"; };
+  rImg.src = `img/${CATS[top.i].id}.png`;
 
   // chart
   const chart = document.getElementById("chart");
