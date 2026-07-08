@@ -382,13 +382,20 @@ function showResult() {
     : top.v >= 34 ? "全体としては健闘中。この領域を整えればさらに伸びます。"
     : "大きなボトルネックはありません。今のやり方を維持しつつ微調整を。";
 
-  // per-category artwork: shown automatically once img/<id>.png exists
+  // per-category artwork: two variants per area, picked at random per run
   const imgWrap = document.getElementById("r-img-wrap");
   const rImg = document.getElementById("r-img");
+  const imgBase = `img/${CATS[top.i].id}`;
   imgWrap.style.display = "none";
   rImg.onload = () => { imgWrap.style.display = "block"; };
-  rImg.onerror = () => { imgWrap.style.display = "none"; };
-  rImg.src = `img/${CATS[top.i].id}.jpg`;
+  rImg.onerror = () => {
+    if (rImg.src.endsWith("-2.jpg")) {
+      rImg.src = `${imgBase}.jpg`;
+    } else {
+      imgWrap.style.display = "none";
+    }
+  };
+  rImg.src = Math.random() < 0.5 ? `${imgBase}.jpg` : `${imgBase}-2.jpg`;
 
   // chart
   const chart = document.getElementById("chart");
