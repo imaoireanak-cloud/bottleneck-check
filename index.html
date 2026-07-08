@@ -224,7 +224,7 @@ footer { text-align: center; font-size: 11px; color: var(--muted); margin-top: 3
         <button class="btn-ghost" onclick="restart()">もう一度診断する</button>
       </div>
     </div>
-    <footer>定期的に再診断して、ボトルネックの変化を追いかけましょう。<br>前回の結果はこの端末に保存され、次回スコアと比較されます。</footer>
+    <footer>定期的に再診断して、ボトルネックの変化を追いかけましょう。<br>結果はこの端末（ブラウザ）にのみ保存され、次回スコアとの比較だけに使われます。外部に送信されることはありません。</footer>
   </section>
 
 </div>
@@ -419,7 +419,7 @@ function showResult() {
   });
   if (prev) {
     document.getElementById("viz-note").textContent =
-      `▲▼は前回（${prev.date}）との比較です。スコアは各領域2問の回答を100点換算したものです。`;
+      `▲▼は前回（${prev.date}）との比較です。比較はこの端末（ブラウザ）内に保存された前回スコアを使うだけで、外部への送信はありません。`;
   }
 
   // advice: top 2 categories
