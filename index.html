@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ボトルネック診断｜あなたの成長を止めているものは？</title>
+<meta name="description" content="勉強・部活・仕事・創作——16の質問に答えるだけで、あなたの成長を最も妨げている「詰まり」（ボトルネック）を診断します。約2分。">
+<meta property="og:title" content="ボトルネック診断">
+<meta property="og:description" content="16問・約2分。頑張っているのに伸びない原因を8つの領域から特定します。">
+<meta property="og:type" content="website">
+<style>
+:root {
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --accent: #2a78d6;
+  --accent-deep: #1c5cab;
+  --bar: #6da7ec;
+  --bar-top: #1c5cab;
+  --good: #006300;
+  --bad: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --accent: #3987e5;
+    --accent-deep: #86b6ef;
+    --bar: #3987e5;
+    --bar-top: #86b6ef;
+    --good: #0ca30c;
+    --bad: #e66767;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+.wrap { max-width: 560px; margin: 0 auto; padding: 24px 16px 64px; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+}
+.screen { display: none; }
+.screen.active { display: block; animation: fadein .25s ease; }
+@keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---- intro ---- */
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--accent); margin-bottom: 8px; }
+h1 { font-size: 24px; font-weight: 800; line-height: 1.4; margin-bottom: 12px; }
+.lead { color: var(--ink-2); font-size: 14px; margin-bottom: 20px; }
+.meta-row { display: flex; gap: 16px; margin-bottom: 24px; }
+.meta-item { flex: 1; text-align: center; padding: 12px 4px; border: 1px solid var(--border); border-radius: 12px; }
+.meta-item .num { font-size: 20px; font-weight: 800; }
+.meta-item .lbl { font-size: 11px; color: var(--muted); }
+button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.btn-primary {
+  display: block; width: 100%;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 700;
+  padding: 15px;
+  transition: filter .15s;
+}
+.btn-primary:active { filter: brightness(.88); }
+.btn-ghost {
+  display: block; width: 100%;
+  background: none; color: var(--ink-2);
+  border: 1px solid var(--border); border-radius: 12px;
+  font-size: 14px; font-weight: 600;
+  padding: 12px;
+}
+.note { font-size: 12px; color: var(--muted); margin-top: 14px; text-align: center; }
+
+/* ---- quiz ---- */
+.progress-track { height: 6px; background: var(--grid); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+.progress-fill { height: 100%; width: 0; background: var(--accent); border-radius: 3px; transition: width .25s ease; }
+.progress-label { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+.q-cat { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+.q-text { font-size: 19px; font-weight: 700; line-height: 1.5; margin-bottom: 22px; min-height: 4.5em; }
+.opts { display: grid; gap: 10px; }
+.opt {
+  text-align: left;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  transition: border-color .15s, background .15s;
+}
+.opt:active { border-color: var(--accent); }
+.opt .opt-hint { display: block; font-size: 11px; font-weight: 400; color: var(--muted); }
+.q-back { margin-top: 18px; background: none; border: none; color: var(--muted); font-size: 13px; padding: 8px; }
+
+/* ---- result ---- */
+.r-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--muted); margin-bottom: 10px; }
+.r-top {
+  font-size: 13px; color: var(--ink-2); margin-bottom: 2px;
+}
+.r-headline { font-size: 26px; font-weight: 800; line-height: 1.35; margin-bottom: 4px; }
+.r-headline em { font-style: normal; color: var(--accent-deep); }
+.r-sub { font-size: 13px; color: var(--ink-2); margin-bottom: 22px; }
+
+.viz-root { margin-bottom: 8px; }
+.viz-title { font-size: 13px; font-weight: 700; color: var(--ink-2); margin-bottom: 14px; }
+.bar-row { display: grid; grid-template-columns: 7.5em 1fr; align-items: center; gap: 10px; margin-bottom: 2px; min-height: 34px; }
+.bar-name { font-size: 12px; font-weight: 600; color: var(--ink-2); text-align: right; line-height: 1.3; }
+.bar-row.is-top .bar-name { color: var(--ink); font-weight: 800; }
+.bar-lane { position: relative; height: 22px; }
+.bar-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: var(--bar);
+  border-radius: 0 4px 4px 0;
+  min-width: 3px;
+  width: 0;
+  transition: width .6s cubic-bezier(.2,.7,.3,1);
+}
+.bar-row.is-top .bar-fill { background: var(--bar-top); }
+.bar-val {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  font-size: 12px; font-weight: 700; color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.bar-delta { font-weight: 600; font-size: 11px; margin-left: 4px; }
+.bar-delta.up { color: var(--bad); }
+.bar-delta.down { color: var(--good); }
+.viz-baseline { border-left: 2px solid var(--baseline); position: absolute; left: 0; top: 0; bottom: 0; }
+.viz-note { font-size: 11px; color: var(--muted); margin-top: 10px; }
+
+.advice { margin-top: 24px; }
+.advice-card {
+  border: 1px solid var(--border); border-left: 4px solid var(--accent);
+  border-radius: 12px; padding: 16px; margin-bottom: 12px;
+  background: var(--surface);
+}
+.advice-card.rank1 { border-left-color: var(--accent-deep); }
+.advice-rank { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .08em; }
+.advice-title { font-size: 16px; font-weight: 800; margin: 2px 0 8px; }
+.advice-card ul { padding-left: 1.2em; }
+.advice-card li { font-size: 13.5px; color: var(--ink-2); margin-bottom: 6px; }
+.advice-card li::marker { color: var(--accent); }
+
+.r-actions { margin-top: 24px; display: grid; gap: 10px; }
+.copied { background: var(--good) !important; color: #fff !important; border-color: transparent !important; }
+footer { text-align: center; font-size: 11px; color: var(--muted); margin-top: 32px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- INTRO -->
+  <section class="screen active" id="scr-intro">
+    <div class="card">
+      <div class="eyebrow">SELF CHECK</div>
+      <h1>ボトルネック診断</h1>
+      <p class="lead">勉強、部活、仕事、創作——「頑張っているのに伸びない」の原因は、努力不足ではなく<strong>特定の詰まり</strong>にあります。16の質問で、あなたの成長を最も妨げている領域を特定します。</p>
+      <div class="meta-row">
+        <div class="meta-item"><div class="num">16</div><div class="lbl">質問</div></div>
+        <div class="meta-item"><div class="num">約2分</div><div class="lbl">所要時間</div></div>
+        <div class="meta-item"><div class="num">8</div><div class="lbl">診断領域</div></div>
+      </div>
+      <button class="btn-primary" onclick="startQuiz()">診断をはじめる</button>
+      <p class="note">回答はこの端末にのみ保存されます（送信されません）</p>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="scr-quiz">
+    <div class="card">
+      <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+      <div class="progress-label" id="progress-label"></div>
+      <div class="q-cat" id="q-cat"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="opts" id="opts"></div>
+      <button class="q-back" id="q-back" onclick="goBack()">← 前の質問に戻る</button>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="scr-result">
+    <div class="card">
+      <div class="r-eyebrow">RESULT</div>
+      <p class="r-top">あなたの最大のボトルネックは</p>
+      <h2 class="r-headline" id="r-headline"></h2>
+      <p class="r-sub" id="r-sub"></p>
+
+      <div class="viz-root">
+        <div class="viz-title">領域別ボトルネック度（高いほど成長を妨げている）</div>
+        <div id="chart"></div>
+        <p class="viz-note" id="viz-note">スコアは各領域2問の回答（0〜3）を100点換算したものです。</p>
+      </div>
+
+      <div class="advice" id="advice"></div>
+
+      <div class="r-actions">
+        <button class="btn-primary" id="btn-image" onclick="saveResultImage()">結果を画像で保存・シェア</button>
+        <button class="btn-ghost" id="btn-copy" onclick="copyResult()">結果をテキストでコピー</button>
+        <button class="btn-ghost" onclick="restart()">もう一度診断する</button>
+      </div>
+    </div>
+    <footer>定期的に再診断して、ボトルネックの変化を追いかけましょう。<br>前回の結果はこの端末に保存され、次回スコアと比較されます。</footer>
+  </section>
+
+</div>
+
+<script>
+const CATS = [
+  { id: "goal", name: "目標・優先順位", tips: [
+    "目標を「期限＋数字」の形で1つに絞る（例：3ヶ月後の大会でレギュラー／今月中に3本投稿）",
+    "大きな目標を「今週やる行動1つ」に翻訳してから週を始める",
+    "「やらないことリスト」を作る。選択肢を減らすほど迷いは消える"
+  ]},
+  { id: "time", name: "時間管理", tips: [
+    "予定は「やること」ではなく「いつやるか」までカレンダーに入れる",
+    "本当の締切の3日前に「自分締切」を置き、そこに向けて動く",
+    "大きな作業は15〜30分の小さな塊に割ってから取りかかる"
+  ]},
+  { id: "focus", name: "集中力", tips: [
+    "スマホは物理的に別の部屋・カバンの中へ。意志力で我慢しない",
+    "「最初の5分だけやる」と決めて始める。始めてしまえば続くことが多い",
+    "自分が集中できる時間帯（朝型・夜型）を見つけて、大事な作業をそこに固定する"
+  ]},
+  { id: "method", name: "やり方・工夫", tips: [
+    "うまくいっている人のやり方を1つだけ真似してみる。我流の前にまず模倣",
+    "結果ではなく「過程」を記録して振り返る。何を変えたら何が変わったかが見える",
+    "人に見せる・教える機会を作る。フィードバックは最速の修正装置"
+  ]},
+  { id: "energy", name: "体調・エネルギー", tips: [
+    "睡眠を「削る対象」ではなく「最優先の予定」としてカレンダーに確保する",
+    "休憩を計画に組み込む。休まず頑張り続けるのは実は非効率",
+    "軽い運動と食事のリズムを整える。体調は集中力の土台"
+  ]},
+  { id: "mental", name: "メンタル・自信", tips: [
+    "「完璧」より「完了」。60点でいいから出す・提出する練習をする",
+    "寝る前に「今日できたこと」を3つ書く。できていない事ばかり数えない",
+    "比べる相手は他人ではなく昨日の自分。SNSの他人は編集された姿"
+  ]},
+  { id: "env", name: "環境・サポート", tips: [
+    "集中できる場所を1つ決めて「そこに行けばやるモード」にする",
+    "道具や環境への小さな投資をためらわない。毎日使うものほど効果が大きい",
+    "相談できる人・仲間・コミュニティを1つ持つ。1人で抱えるのが一番遅い"
+  ]},
+  { id: "habit", name: "継続・習慣", tips: [
+    "毎日同じ時間・同じ場所で始めて「きっかけ」を固定する",
+    "「ゼロの日」を作らない。忙しい日も1分だけやって連続を切らさない",
+    "やった記録をつけて見える化する。続いている実感が次の継続を生む"
+  ]}
+];
+
+const QUESTIONS = [
+  { cat: 0, text: "「何のためにやっているのか」と聞かれると、答えに詰まる" },
+  { cat: 0, text: "やるべきことが多すぎて、何から手をつけるか毎回迷う" },
+  { cat: 1, text: "締切や予定に、いつも追われている" },
+  { cat: 1, text: "「あとでやろう」と思ったことが、結局やれずに終わる" },
+  { cat: 2, text: "作業や練習の途中で、気づくとスマホを触っている" },
+  { cat: 2, text: "取りかかるまでに時間がかかる（なかなかエンジンがかからない）" },
+  { cat: 3, text: "頑張っている量のわりに、成果が伸びている実感がない" },
+  { cat: 3, text: "自分のやり方が正しいのか、確かめる手段がない" },
+  { cat: 4, text: "睡眠不足のまま1日を始めることが多い" },
+  { cat: 4, text: "疲れが抜けず、本来の力が出せていない気がする" },
+  { cat: 5, text: "失敗が怖くて、挑戦を避けてしまうことがある" },
+  { cat: 5, text: "他人と比べて落ち込むことが多い" },
+  { cat: 6, text: "集中できる場所や環境が確保できていない" },
+  { cat: 6, text: "困ったときに相談できる人・教えてくれる人がいない" },
+  { cat: 7, text: "新しい取り組みが、三日坊主で終わりがち" },
+  { cat: 7, text: "自分がどれだけやったか、記録も振り返りもしていない" }
+];
+
+const OPTIONS = [
+  { label: "あてはまらない", hint: "ほぼ困っていない", score: 0 },
+  { label: "たまにある", hint: "月に数回レベル", score: 1 },
+  { label: "よくある", hint: "毎回ではないが頻繁", score: 2 },
+  { label: "いつもそう", hint: "毎回悩まされている", score: 3 }
+];
+
+const STORE_KEY = "gbd_history_v1";
+let answers = [];
+let current = 0;
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({ top: 0 });
+}
+
+function startQuiz() {
+  answers = [];
+  current = 0;
+  renderQuestion();
+  show("scr-quiz");
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  document.getElementById("progress").style.width = (current / QUESTIONS.length * 100) + "%";
+  document.getElementById("progress-label").textContent = `質問 ${current + 1} / ${QUESTIONS.length}`;
+  document.getElementById("q-cat").textContent = CATS[q.cat].name;
+  document.getElementById("q-text").textContent = q.text;
+  const opts = document.getElementById("opts");
+  opts.innerHTML = "";
+  OPTIONS.forEach(o => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.innerHTML = `${o.label}<span class="opt-hint">${o.hint}</span>`;
+    b.onclick = () => answer(o.score);
+    opts.appendChild(b);
+  });
+  document.getElementById("q-back").style.visibility = current === 0 ? "hidden" : "visible";
+}
+
+function answer(score) {
+  answers[current] = score;
+  current++;
+  if (current < QUESTIONS.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function goBack() {
+  if (current > 0) { current--; renderQuestion(); }
+}
+
+function computeScores() {
+  const sums = CATS.map(() => 0);
+  QUESTIONS.forEach((q, i) => { sums[q.cat] += answers[i] || 0; });
+  return sums.map(s => Math.round(s / 6 * 100));
+}
+
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch { return []; }
+}
+
+function saveHistory(scores) {
+  const h = loadHistory();
+  h.push({ date: new Date().toISOString().slice(0, 10), scores });
+  localStorage.setItem(STORE_KEY, JSON.stringify(h.slice(-10)));
+}
+
+let lastResult = null;
+
+function showResult() {
+  const scores = computeScores();
+  const history = loadHistory();
+  const prev = history.length ? history[history.length - 1] : null;
+  saveHistory(scores);
+
+  const ranked = scores.map((v, i) => ({ i, v })).sort((a, b) => b.v - a.v);
+  const top = ranked[0], second = ranked[1];
+  lastResult = { scores, top, second };
+
+  document.getElementById("r-headline").innerHTML = `<em>「${CATS[top.i].name}」</em>`;
+  document.getElementById("r-sub").textContent =
+    top.v >= 67 ? "この領域の詰まりを取るだけで、成果は大きく変わります。"
+    : top.v >= 34 ? "全体としては健闘中。この領域を整えればさらに伸びます。"
+    : "大きなボトルネックはありません。今のやり方を維持しつつ微調整を。";
+
+  // chart
+  const chart = document.getElementById("chart");
+  chart.innerHTML = "";
+  ranked.forEach((r, idx) => {
+    const row = document.createElement("div");
+    row.className = "bar-row" + (idx === 0 ? " is-top" : "");
+    let delta = "";
+    if (prev && typeof prev.scores[r.i] === "number") {
+      const d = r.v - prev.scores[r.i];
+      if (d !== 0) {
+        delta = `<span class="bar-delta ${d > 0 ? "up" : "down"}">${d > 0 ? "▲" : "▼"}${Math.abs(d)}</span>`;
+      }
+    }
+    row.innerHTML =
+      `<div class="bar-name">${CATS[r.i].name}</div>` +
+      `<div class="bar-lane"><span class="viz-baseline"></span>` +
+      `<div class="bar-fill" data-w="${r.v}"></div>` +
+      `<span class="bar-val">${r.v}${delta}</span></div>`;
+    chart.appendChild(row);
+  });
+  if (prev) {
+    document.getElementById("viz-note").textContent =
+      `▲▼は前回（${prev.date}）との比較です。スコアは各領域2問の回答を100点換算したものです。`;
+  }
+
+  // advice: top 2 categories
+  const advice = document.getElementById("advice");
+  advice.innerHTML = "";
+  [top, second].forEach((r, idx) => {
+    const c = CATS[r.i];
+    const card = document.createElement("div");
+    card.className = "advice-card" + (idx === 0 ? " rank1" : "");
+    card.innerHTML =
+      `<div class="advice-rank">${idx === 0 ? "最優先で改善" : "次に改善"}｜スコア ${r.v}</div>` +
+      `<div class="advice-title">${c.name}</div>` +
+      `<ul>${c.tips.map(t => `<li>${t}</li>`).join("")}</ul>`;
+    advice.appendChild(card);
+  });
+
+  show("scr-result");
+
+  // animate bars (max score = full lane width, others relative to 100)
+  requestAnimationFrame(() => {
+    document.querySelectorAll(".bar-fill").forEach(el => {
+      const w = Number(el.dataset.w);
+      el.style.width = "calc(" + (w * 0.82) + "% )";
+      const val = el.parentElement.querySelector(".bar-val");
+      val.style.left = "calc(" + (w * 0.82) + "% + 6px)";
+    });
+  });
+}
+
+function copyResult() {
+  if (!lastResult) return;
+  const { top, second } = lastResult;
+  const text =
+    `【ボトルネック診断】\n` +
+    `最大のボトルネック：${CATS[top.i].name}（スコア ${top.v}）\n` +
+    `次点：${CATS[second.i].name}（スコア ${second.v}）\n` +
+    location.href;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("btn-copy");
+    btn.textContent = "コピーしました ✓";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "結果をコピーする"; btn.classList.remove("copied"); }, 1800);
+  });
+}
+
+function restart() {
+  startQuiz();
+}
+
+/* ---- result image (canvas) ---- */
+const IMG = {
+  page: "#f9f9f7", surface: "#fcfcfb",
+  ink: "#0b0b0b", ink2: "#52514e", muted: "#898781",
+  grid: "#e1e0d9", accent: "#2a78d6", deep: "#1c5cab",
+  bar: "#6da7ec", barTop: "#1c5cab"
+};
+const IMG_FONT = 'system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif';
+
+function rrect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function buildResultImage() {
+  const { scores } = lastResult;
+  const ranked = scores.map((v, i) => ({ i, v })).sort((a, b) => b.v - a.v);
+  const top = ranked[0];
+
+  const W = 1080, H = 1350;
+  const canvas = document.createElement("canvas");
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d");
+
+  // page + card
+  ctx.fillStyle = IMG.page;
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = IMG.surface;
+  rrect(ctx, 40, 40, W - 80, H - 80, 32);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(11,11,11,0.10)";
+  ctx.lineWidth = 2;
+  rrect(ctx, 40, 40, W - 80, H - 80, 32);
+  ctx.stroke();
+
+  const L = 104; // left margin
+  ctx.textBaseline = "alphabetic";
+
+  // header
+  ctx.fillStyle = IMG.accent;
+  ctx.font = `700 26px ${IMG_FONT}`;
+  ctx.fillText("SELF CHECK RESULT", L, 138);
+  ctx.fillStyle = IMG.ink;
+  ctx.font = `800 54px ${IMG_FONT}`;
+  ctx.fillText("ボトルネック診断", L, 208);
+  ctx.fillStyle = IMG.muted;
+  ctx.font = `400 26px ${IMG_FONT}`;
+  ctx.fillText(new Date().toLocaleDateString("ja-JP"), L, 254);
+
+  // divider
+  ctx.strokeStyle = IMG.grid;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(L, 292); ctx.lineTo(W - L, 292); ctx.stroke();
+
+  // top bottleneck
+  ctx.fillStyle = IMG.ink2;
+  ctx.font = `600 32px ${IMG_FONT}`;
+  ctx.fillText("最大のボトルネックは", L, 368);
+  ctx.fillStyle = IMG.deep;
+  ctx.font = `800 76px ${IMG_FONT}`;
+  ctx.fillText(`「${CATS[top.i].name}」`, L - 10, 466);
+
+  // chart
+  const chartTitleY = 566;
+  ctx.fillStyle = IMG.ink2;
+  ctx.font = `700 28px ${IMG_FONT}`;
+  ctx.fillText("領域別ボトルネック度", L, chartTitleY);
+
+  const rowH = 72, barH = 36;
+  const nameRight = L + 250;
+  const laneX = nameRight + 28;
+  const laneW = W - L - laneX + L - 100; // leave room for value labels
+  let y = chartTitleY + 48;
+
+  ranked.forEach((r, idx) => {
+    const isTop = idx === 0;
+    const cy = y + rowH / 2;
+    // name
+    ctx.fillStyle = isTop ? IMG.ink : IMG.ink2;
+    ctx.font = `${isTop ? 800 : 600} 28px ${IMG_FONT}`;
+    ctx.textAlign = "right";
+    ctx.fillText(CATS[r.i].name, nameRight, cy + 10);
+    ctx.textAlign = "left";
+    // baseline tick
+    ctx.strokeStyle = "#c3c2b7";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(laneX, y + 8); ctx.lineTo(laneX, y + rowH - 8); ctx.stroke();
+    // bar
+    const w = Math.max(6, laneW * r.v / 100);
+    ctx.fillStyle = isTop ? IMG.barTop : IMG.bar;
+    rrect(ctx, laneX, cy - barH / 2, w, barH, 8);
+    // square off the left edge against the baseline
+    ctx.fill();
+    ctx.fillRect(laneX, cy - barH / 2, Math.min(10, w), barH);
+    // value
+    ctx.fillStyle = IMG.ink2;
+    ctx.font = `700 28px ${IMG_FONT}`;
+    ctx.fillText(String(r.v), laneX + w + 16, cy + 10);
+    y += rowH;
+  });
+
+  // footer
+  const fy = y + 64;
+  ctx.strokeStyle = IMG.grid;
+  ctx.beginPath(); ctx.moveTo(L, fy - 34); ctx.lineTo(W - L, fy - 34); ctx.stroke();
+  ctx.fillStyle = IMG.ink2;
+  ctx.font = `600 28px ${IMG_FONT}`;
+  ctx.fillText("あなたのボトルネックも2分で診断できます", L, fy + 14);
+  ctx.fillStyle = IMG.accent;
+  ctx.font = `600 26px ${IMG_FONT}`;
+  const url = location.protocol.startsWith("http") ? location.href.split(/[?#]/)[0] : "";
+  if (url) ctx.fillText(url, L, fy + 56);
+
+  return canvas;
+}
+
+function saveResultImage() {
+  if (!lastResult) return;
+  const btn = document.getElementById("btn-image");
+  const canvas = buildResultImage();
+  canvas.toBlob(async blob => {
+    if (!blob) return;
+    const file = new File([blob], "bottleneck-result.png", { type: "image/png" });
+    // prefer the native share sheet on mobile
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: "ボトルネック診断" });
+        return;
+      } catch (e) {
+        if (e.name === "AbortError") return; // user closed the sheet
+        // fall through to download
+      }
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "bottleneck-result.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    const orig = btn.textContent;
+    btn.textContent = "画像を保存しました ✓";
+    setTimeout(() => { btn.textContent = orig; }, 1800);
+  }, "image/png");
+}
+</script>
+</body>
+</html>
